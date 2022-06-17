@@ -1,0 +1,31 @@
+.usersTable{
+    border-collapse: collapse;
+    width:100%;
+    margin-top: 0.7rem;
+}
+
+.usersTable>thead{
+    border-bottom: 0.5px solid lightgray;
+}
+
+.usersTable>tbody>tr{
+    border-bottom: 0.5px solid lightgray;
+}
+
+.usersTable>thead>tr>th{
+    padding-bottom:0.6rem;
+    width: 20%;
+    text-align: left;
+}
+
+.usersTable>tbody>tr>td{
+    padding-top:0.75rem;
+    padding-bottom:0.6rem;
+    width: 20%;
+    text-align: left;
+}
+
+input.largerCheckbox{
+    width: 18px;
+    height:18px;
+}

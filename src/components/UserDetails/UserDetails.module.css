@@ -1,0 +1,18 @@
+input.largerCheckbox{
+    width: 18px;
+    height:18px;
+}
+
+button{
+    background-color: white;
+    margin-right: 2px;
+    border:none;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+.selected{
+    background-color: lightgray;
+}

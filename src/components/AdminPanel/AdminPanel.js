@@ -72,7 +72,7 @@ function AdminPanel({
       paginationGroup.push(value);
     }
 
-    if (paginationGroup.at(0) > pageLimit) {
+    if (paginationGroup.at(0) > pages) {
       setCurrentPage(start);
     }
     return paginationGroup;
@@ -89,7 +89,7 @@ function AdminPanel({
     const isSelected = selectedUsers.every((user) => user.selected);
     return isSelected;
   };
-
+  console.log(currentPage);
   return (
     <>
       <input

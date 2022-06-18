@@ -124,7 +124,7 @@ function App() {
           handleDeleteSelected={handleDeleteSelected}
         />
       ) : (
-        <h1>No Users to Display, {error.message}</h1>
+        <h1>No Users to Display! {error.message}</h1>
       )}
     </div>
   );

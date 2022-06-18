@@ -1,6 +1,6 @@
+import NavigationButtons from "../NavigationButtons/NavigationButtons";
 import React from "react";
 import styles from "./ActionButtons.module.css";
-import NavigationButtons from "../NavigationButtons/NavigationButtons";
 
 function ActionButtons({
   getPaginationGroups,
@@ -44,19 +44,19 @@ function ActionButtons({
             content={item}
             onClick={changePage}
             isDisabled={false}
-            isActive={currentPage === index + 1 ? true : false}
+            isActive={currentPage === item ? true : false}
           />
         ))}
         <NavigationButtons
           content={">"}
           onClick={goToNextPage}
-          isDisabled={currentPage === pages || pages === 0 ? true : false}
+          isDisabled={currentPage >= pages || pages === 0 ? true : false}
           isActive={false}
         />
         <NavigationButtons
           content={">>"}
           onClick={goToLastPage}
-          isDisabled={currentPage === pages || pages === 0 ? true : false}
+          isDisabled={currentPage >= pages || pages === 0 ? true : false}
           isActive={false}
         />
       </div>

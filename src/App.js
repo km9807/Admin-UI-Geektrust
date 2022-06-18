@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { StatusCodes } from "http-status-codes";
-import styles from "./App.module.css";
+
 import AdminPanel from "./components/AdminPanel/AdminPanel";
+import { StatusCodes } from "http-status-codes";
+import axios from "axios";
 import configObject from "./config/configuration";
+import styles from "./App.module.css";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -21,9 +22,7 @@ function App() {
       }
       let usersData = response.data.map((user) => ({
         ...user,
-        deleted: false,
         available: true,
-        editable: false,
         selected: false,
       }));
       setUsers(usersData);
@@ -37,12 +36,7 @@ function App() {
 
   const handleDelete = (id) => {
     const data = [...users];
-    const afterDeletionData = data.map((d) => {
-      if (d.id === id) {
-        return { ...d, deleted: true };
-      }
-      return d;
-    });
+    const afterDeletionData = data.filter((d) => d.id !== id);
     setUsers(afterDeletionData);
   };
 
@@ -63,33 +57,11 @@ function App() {
     setUsers(afterSearchData);
   };
 
-  const handleEdit = (user) => {
-    const data = [...users];
-    const userId = data.indexOf(user);
-    data[userId].editable = true;
-    setUsers(data);
-  };
-
-  const handleUndoEdit = (user) => {
-    const data = [...users];
-    const userId = data.indexOf(user);
-    data[userId].editable = false;
-    setUsers(data);
-  };
-
   const handleConfirmEdit = (user, editedValues) => {
     const data = [...users];
     const userId = data.indexOf(user);
-    if (editedValues["name"]) {
-      data[userId].name = editedValues.name;
-    }
-    if (editedValues["email"]) {
-      data[userId].email = editedValues.email;
-    }
-    if (editedValues["role"]) {
-      data[userId].role = editedValues.role;
-    }
-    data[userId].editable = false;
+    const newData = { ...data[userId], ...editedValues };
+    data[userId] = newData;
     setUsers(data);
   };
 
@@ -130,14 +102,11 @@ function App() {
 
   const handleDeleteSelected = (selectedUsers) => {
     const data = [...users];
-    data.forEach((d) => {
-      selectedUsers.forEach((user) => {
-        if (user.id === d.id && user.selected) {
-          d.deleted = true;
-        }
-      });
-    });
-    setUsers(data);
+    const selectedUserIds = selectedUsers.map((d) => d.id);
+    const filterdData = data.filter(
+      (user) => !(selectedUserIds.includes(user.id) && user.selected)
+    );
+    setUsers(filterdData);
   };
 
   return (
@@ -149,8 +118,6 @@ function App() {
           dataLimit={configObject.DATA_LIMIT}
           onDelete={handleDelete}
           onSearch={handleSearch}
-          onEdit={handleEdit}
-          handleUndoEdit={handleUndoEdit}
           handleConfirmEdit={handleConfirmEdit}
           onSelect={handleSelect}
           handleSelectAll={handleSelectAll}

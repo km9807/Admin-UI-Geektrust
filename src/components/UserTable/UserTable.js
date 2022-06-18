@@ -1,27 +1,16 @@
-import React, { useState } from "react";
-import styles from "./UserTable.module.css";
+import React from "react";
 import UserDetails from "../UserDetails/UserDetails";
+import styles from "./UserTable.module.css";
 
 function UserTable({
   onDelete,
-  onEdit,
   getPaginatedData,
   handleConfirmEdit,
-  handleUndoEdit,
   onSelect,
   handleSelectAll,
   getUsersInThatPage,
   getSelectedUsers,
 }) {
-  const [editedValues, setEditedValues] = useState({});
-
-  const handleEdit = (event) => {
-    setEditedValues({
-      ...editedValues,
-      [event.target.name]: event.target.value,
-    });
-  };
-
   return (
     <table className={styles.usersTable}>
       <thead>
@@ -49,10 +38,7 @@ function UserTable({
             user={user}
             key={idx}
             onDelete={onDelete}
-            onEdit={onEdit}
-            handleUndoEdit={handleUndoEdit.bind(null, user)}
-            handleEditedValues={handleEdit}
-            onConfirmEdit={handleConfirmEdit.bind(null, user, editedValues)}
+            onConfirmEdit={handleConfirmEdit}
             onSelect={onSelect}
           />
         ))}

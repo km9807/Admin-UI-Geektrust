@@ -1,24 +1,38 @@
-import React from "react";
-import styles from "./UserDetails.module.css";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import DoneIcon from "@mui/icons-material/Done";
-import ClearIcon from "@mui/icons-material/Clear";
+import React, { useState } from "react";
 
-function UserDetails({
-  user,
-  onDelete,
-  onEdit,
-  handleEditedValues,
-  handleUndoEdit,
-  onConfirmEdit,
-  onSelect,
-}) {
+import ClearIcon from "@mui/icons-material/Clear";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DoneIcon from "@mui/icons-material/Done";
+import EditIcon from "@mui/icons-material/Edit";
+import styles from "./UserDetails.module.css";
+
+function UserDetails({ user, onDelete, onConfirmEdit, onSelect }) {
   const userRoleLowerCase = user.role;
   const userRole =
     userRoleLowerCase.charAt(0).toUpperCase() + userRoleLowerCase.slice(1);
 
-  if (user.available && !user.deleted) {
+  const [editable, setEditable] = useState(false);
+
+  const [userEditState, setUserEditState] = useState(user);
+
+  const handleEditedValues = (event) => {
+    setUserEditState({
+      ...userEditState,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const onEdit = () => {
+    setEditable(true);
+    setUserEditState({ ...user });
+  };
+
+  const onConfirm = () => {
+    onConfirmEdit(user, userEditState);
+    setEditable(false);
+  };
+
+  if (user.available) {
     return (
       <>
         <tr className={`${user.selected ? styles.selected : ""}`}>
@@ -31,35 +45,23 @@ function UserDetails({
               checked={user.selected}
             />
           </td>
-          {user.editable ? (
+          {editable ? (
             <>
-              <td>
-                <input
-                  type="text"
-                  name="name"
-                  defaultValue={user.name}
-                  style={{ borderRadius: "6px", height: "22px" }}
-                  onChange={handleEditedValues}
-                ></input>
-              </td>
-              <td>
-                <input
-                  type="email"
-                  name="email"
-                  defaultValue={user.email}
-                  style={{ borderRadius: "6px", height: "22px" }}
-                  onChange={handleEditedValues}
-                ></input>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="role"
-                  defaultValue={userRole}
-                  style={{ borderRadius: "6px", height: "22px" }}
-                  onChange={handleEditedValues}
-                ></input>
-              </td>
+              {[
+                { name: "name", type: "text" },
+                { name: "email", type: "email" },
+                { name: "role", type: "text" },
+              ].map((field) => (
+                <td key={field.name}>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={userEditState[field.name]}
+                    style={{ borderRadius: "6px", height: "22px" }}
+                    onChange={handleEditedValues}
+                  ></input>
+                </td>
+              ))}
             </>
           ) : (
             <>
@@ -69,14 +71,14 @@ function UserDetails({
             </>
           )}
 
-          {user.editable ? (
+          {editable ? (
             <>
               <td>
                 <button className={`${user.selected ? styles.selected : ""}`}>
-                  <DoneIcon onClick={onConfirmEdit} />
+                  <DoneIcon onClick={() => onConfirm()} />
                 </button>
                 <button className={`${user.selected ? styles.selected : ""}`}>
-                  <ClearIcon onClick={handleUndoEdit} />
+                  <ClearIcon onClick={() => setEditable(false)} />
                 </button>
               </td>
             </>
@@ -84,7 +86,7 @@ function UserDetails({
             <>
               <td>
                 <button className={`${user.selected ? styles.selected : ""}`}>
-                  <EditIcon onClick={() => onEdit(user)} />
+                  <EditIcon onClick={() => onEdit()} />
                 </button>
                 <button className={`${user.selected ? styles.selected : ""}`}>
                   <DeleteOutlineIcon

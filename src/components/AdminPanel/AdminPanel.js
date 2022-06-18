@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import styles from "./AdminPanel.module.css";
-import UserTable from "../UserTable/UserTable";
+
 import ActionButtons from "../ActionButtons/ActionButtons";
+import UserTable from "../UserTable/UserTable";
+import styles from "./AdminPanel.module.css";
 
 function AdminPanel({
   users,
@@ -9,8 +10,6 @@ function AdminPanel({
   dataLimit,
   onDelete,
   onSearch,
-  onEdit,
-  handleUndoEdit,
   handleConfirmEdit,
   onSelect,
   handleSelectAll,
@@ -21,7 +20,7 @@ function AdminPanel({
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    let userData = users.filter((user) => user.available && !user.deleted);
+    let userData = users.filter((user) => user.available);
     let calculatedPages = Math.ceil(userData.length / dataLimit);
     setPages(calculatedPages);
 
@@ -33,6 +32,7 @@ function AdminPanel({
       return;
     }
     setPageLimit(pagesLimit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
   const goToNextPage = () => {
@@ -58,7 +58,7 @@ function AdminPanel({
   };
 
   const getPaginatedData = () => {
-    const userData = users.filter((user) => user.available && !user.deleted);
+    const userData = users.filter((user) => user.available);
     const start = currentPage * dataLimit - dataLimit;
     const end = start + dataLimit;
     return userData.slice(start, end);
@@ -100,9 +100,7 @@ function AdminPanel({
       />
       <UserTable
         onDelete={onDelete}
-        onEdit={onEdit}
         getPaginatedData={getPaginatedData}
-        handleUndoEdit={handleUndoEdit}
         handleConfirmEdit={handleConfirmEdit}
         onSelect={onSelect}
         handleSelectAll={handleSelectAll}
